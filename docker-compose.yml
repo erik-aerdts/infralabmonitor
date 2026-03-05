@@ -1,0 +1,92 @@
+version: "3.8"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /srv/prometheus:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - /srv/grafana:/var/lib/grafana
+    restart: unless-stopped
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - /srv/influxdb:/var/lib/influxdb
+    environment:
+      INFLUXDB_DB: pfsense
+      INFLUXDB_ADMIN_USER: ptelegraf
+      INFLUXDB_ADMIN_PASSWORD: XXXXXXX
+    restart: unless-stopped
+
+  pve_exporter:
+    image: prompve/prometheus-pve-exporter:latest
+    container_name: pve_exporter
+    ports:
+      - "9221:9221"
+    volumes:
+      - /home/erik/monitoring/pve.yml:/etc/pve.yml:ro
+    command: ["--config.file=/etc/pve.yml"]
+    restart: unless-stopped
+
+  esx_erik_esx01:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.233.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  esx_blade01:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.101.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  esx_blade02:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.102.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  esx_blade03:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.103.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  esx_blade04:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.104.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
