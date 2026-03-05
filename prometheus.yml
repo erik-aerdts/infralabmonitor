@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: "esxi"
+    static_configs:
+      - targets:
+          - "esx_erik_esx01:9272"
+          - "esx_blade01:9272"
+          - "esx_blade02:9272"
+          - "esx_blade03:9272"
+          - "esx_blade04:9272"
+
+  # --- Proxmox exporter (1 exporter, meerdere Proxmox targets) ---
+  - job_name: "proxmox"
+    metrics_path: /pve
+    params:
+      module: [default]
+    static_configs:
+      - targets:
+          - "192.168.110.9"
+          - "192.168.112.9"
+    relabel_configs:
+      # zet target in query-param target
+      - source_labels: [__address__]
+        target_label: __param_target
+      # instance label = originele proxmox node
+      - source_labels: [__param_target]
+        target_label: instance
+      # scrape-adres = exporter
+      - target_label: __address__
+        replacement: "pve_exporter:9221"
+
+  - job_name: "DHCP-PXE-server"
+    static_configs:
+    - targets:
+        - "192.168.254.101:9100"
