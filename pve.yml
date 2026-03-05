@@ -1,0 +1,4 @@
+default:
+  user: "prometheus@pve"
+  password: "XXXXXXX"
+  verify_ssl: false
