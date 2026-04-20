@@ -1,0 +1,6 @@
+mappings:
+  - match: ".+"
+    match_type: regex
+    name: "truenas_metric"
+    labels:
+      path: "$0"
