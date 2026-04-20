@@ -12,6 +12,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=7d"
     restart: unless-stopped
 
   grafana:
@@ -33,7 +34,18 @@ services:
     environment:
       INFLUXDB_DB: pfsense
       INFLUXDB_ADMIN_USER: ptelegraf
-      INFLUXDB_ADMIN_PASSWORD: XXXXXXX
+      INFLUXDB_ADMIN_PASSWORD: ptelegraf
+    restart: unless-stopped
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /var/lib/node_exporter/textfile_collector:/textfile_collector:ro
+    command:
+      - "--collector.textfile.directory=/textfile_collector"
     restart: unless-stopped
 
   pve_exporter:
@@ -51,42 +63,184 @@ services:
     environment:
       VSPHERE_HOST: "192.168.233.9"
       VSPHERE_USER: "monitor"
-      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
       VSPHERE_IGNORE_SSL: "true"
     restart: unless-stopped
 
-  esx_blade01:
+  blade01:
     image: pryorda/vmware_exporter:latest
     environment:
       VSPHERE_HOST: "192.168.101.9"
       VSPHERE_USER: "monitor"
-      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
       VSPHERE_IGNORE_SSL: "true"
+      VSPHERE_SPECS_SIZE: "5000"
     restart: unless-stopped
 
-  esx_blade02:
+  blade02:
     image: pryorda/vmware_exporter:latest
     environment:
       VSPHERE_HOST: "192.168.102.9"
       VSPHERE_USER: "monitor"
-      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
       VSPHERE_IGNORE_SSL: "true"
     restart: unless-stopped
 
-  esx_blade03:
+  blade03:
     image: pryorda/vmware_exporter:latest
     environment:
       VSPHERE_HOST: "192.168.103.9"
       VSPHERE_USER: "monitor"
-      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
       VSPHERE_IGNORE_SSL: "true"
     restart: unless-stopped
 
-  esx_blade04:
+      #blade04:
+      # image: pryorda/vmware_exporter:latest
+      # environment:
+      # VSPHERE_HOST: "192.168.104.9"
+      # VSPHERE_USER: "monitor"
+      # VSPHERE_PASSWORD: "123!@#qweQWE"
+      # VSPHERE_IGNORE_SSL: "true"
+      # restart: unless-stopped
+
+  blade05:
     image: pryorda/vmware_exporter:latest
     environment:
-      VSPHERE_HOST: "192.168.104.9"
+      VSPHERE_HOST: "192.168.105.9"
       VSPHERE_USER: "monitor"
-      VSPHERE_PASSWORD: "XXXXXXX"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
       VSPHERE_IGNORE_SSL: "true"
     restart: unless-stopped
+
+  blade06:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.106.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  blade07:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.107.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  blade09:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.109.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  blade11:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.111.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  suite_blade01:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.117.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  suite_blade02:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.118.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  suite_blade03:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.119.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  rack04:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.204.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  rack10:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.210.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  rack12:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.212.9"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  aux2:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.254.234"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  aux1:
+    image: pryorda/vmware_exporter:latest
+    environment:
+      VSPHERE_HOST: "192.168.254.235"
+      VSPHERE_USER: "monitor"
+      VSPHERE_PASSWORD: "123!@#qweQWE"
+      VSPHERE_IGNORE_SSL: "true"
+    restart: unless-stopped
+
+  truenas_graphite_exporter:
+    image: prom/graphite-exporter:latest
+    container_name: truenas_graphite_exporter
+    ports:
+      - "9108:9108"
+      - "2003:2003"
+    command:
+      - "--graphite.listen-address=:2003"
+      - "--web.listen-address=:9108"
+    volumes:
+      - ./truenas-mapping.yml:/tmp/truenas-mapping.yml:ro
+    restart: unless-stopped
+
+  # Blackbox Exporter (nieuw)
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    ports:
+      - "9115:9115"  # Standaard poort van Blackbox Exporter
+    volumes:
+      - ./blackbox.yml:/etc/blackbox_exporter/config.yml  # Configuratiebestand
+    command:
+      - '--config.file=/etc/blackbox_exporter/config.yml'
