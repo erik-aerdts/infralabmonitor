@@ -10,10 +10,23 @@ scrape_configs:
     static_configs:
       - targets:
           - "esx_erik_esx01:9272"
-          - "esx_blade01:9272"
-          - "esx_blade02:9272"
-          - "esx_blade03:9272"
-          - "esx_blade04:9272"
+          - "blade01:9272"
+          - "blade02:9272"
+          - "blade03:9272"
+          - "blade05:9272"
+          - "blade06:9272"
+          - "blade07:9272"
+          - "blade09:9272"
+          - "blade11:9272"
+          - "suite_blade01:9272"
+          - "suite_blade02:9272"
+          - "suite_blade03:9272"
+          - "rack04:9272"
+          - "rack10:9272"
+          - "rack12:9272"
+          - "aux1:9272"
+          - "aux2:9272"
+
 
   # --- Proxmox exporter (1 exporter, meerdere Proxmox targets) ---
   - job_name: "proxmox"
@@ -24,6 +37,15 @@ scrape_configs:
       - targets:
           - "192.168.110.9"
           - "192.168.112.9"
+          - "192.168.254.87"
+          - "192.168.114.9"
+          - "192.168.115.9"  
+          - "192.168.116.9"
+          - "192.168.205.9"
+          - "192.168.207.9"
+          - "192.168.211.9"
+          - "192.168.214.9"
+          - "192.168.104.9"
     relabel_configs:
       # zet target in query-param target
       - source_labels: [__address__]
@@ -39,3 +61,76 @@ scrape_configs:
     static_configs:
     - targets:
         - "192.168.254.101:9100"
+
+  - job_name: "truenas"
+    static_configs:
+    - targets:
+        - "truenas_graphite_exporter:9108"
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [icmp_ping]  # of http_2xx, tcp_connect
+    static_configs:
+      - targets:
+          - 192.168.101.9    # IP van je server/device
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Blackbox Exporter-adres
+
+
+  - job_name: "node_exporter"
+    static_configs:
+      - targets:
+          - "node_exporter:9100"
+        labels:
+          instance: "DHCP-PXE server"
+
+
+
+  - job_name: "proxmox_node_exporter"
+    static_configs:
+      - targets:
+          - "192.168.110.9:9100"
+        labels:
+          instance: "blade10"
+      - targets:
+           - "192.168.112.9:9100"
+        labels:
+          instance: "blade12"
+      - targets:
+          - "192.168.114.9:9100"
+        labels:
+          instance: "blade14"
+      - targets:
+           - "192.168.115.9:9100"
+        labels:
+          instance: "blade15"
+      - targets:
+          - "192.168.116.9:9100"
+        labels:
+          instance: "blade16"
+      - targets:
+           - "192.168.205.9:9100"
+        labels:
+          instance: "rack5"
+      - targets:
+          - "192.168.207.9:9100"
+        labels:
+          instance: "rack7"
+      - targets:
+           - "192.168.211.9:9100"
+        labels:
+          instance: "rack11"
+      - targets:
+           - "192.168.254.87:9100"
+        labels:
+          instance: "blade13"
+      - targets:
+           - "192.168.104.9:9100"
+        labels:
+          instance: "blade04"
